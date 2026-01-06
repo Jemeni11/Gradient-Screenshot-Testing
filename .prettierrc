@@ -1,0 +1,28 @@
+{
+  "semi": true,
+  "tabWidth": 2,
+  "useTabs": false,
+  "printWidth": 140,
+  "endOfLine": "auto",
+  "singleQuote": false,
+  "bracketSpacing": true,
+  "trailingComma": "all",
+  "arrowParens": "always",
+  "jsxSingleQuote": false,
+  "quoteProps": "consistent",
+  "bracketSameLine": false,
+  "plugins": ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
+  "importOrder": [
+    "^react$",
+    "",
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@(.*)$",
+    "",
+    "^[./]",
+    "^(?!.*[.]css$)[./].*$",
+    ".css$"
+  ],
+  "tailwindStylesheet": "./src/index.css"
+}
