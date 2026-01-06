@@ -125,14 +125,22 @@ export default function App() {
 
       {/* Main Content */}
       <main className="flex flex-1 flex-col items-center justify-center p-8">
-        <h1 className="mb-8 scroll-m-20 font-aladin text-4xl font-extrabold tracking-tight">Gradie Testing</h1>
-
-        <div className="w-full max-w-3xl">
+        <h1 className="scroll-m-20 font-aladin text-4xl font-extrabold tracking-tight">Gradie Testing</h1>
+        <header className="my-4 inline-flex items-center justify-center">
+          <p className="flex items-baseline gap-1">
+            Check out
+            <a className="font-aladin text-primary italic" href="https://gradie.xyz?ref=testing" target="_blank" rel="noopener noreferrer">
+              Gradie
+            </a>
+          </p>
+        </header>
+        <div className="w-full max-w-xl">
           <GradientPreview ref={gradientRef} gradient={gradientString} className="w-full" />
         </div>
 
         <p
           onClick={() => copyToClipboard(gradientString)}
+          title="Click to copy"
           className="my-6 max-w-3xl cursor-pointer text-center font-aladin text-lg font-bold break-all text-black hover:text-primary"
         >
           {gradientString}
