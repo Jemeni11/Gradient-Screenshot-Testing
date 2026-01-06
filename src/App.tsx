@@ -1,5 +1,5 @@
 import type { CSSProperties, Ref } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { screenshot } from "@renoun/screenshot";
@@ -44,17 +44,9 @@ const defaultGradients = [
 ];
 
 export default function App() {
-  const [currentIndex, setCurrentIndex] = useState(Math.floor(Math.random() * defaultGradients.length));
+  const [currentIndex, setCurrentIndex] = useState(0);
   const gradientString = defaultGradients[currentIndex];
   const gradientRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex(Math.floor(Math.random() * defaultGradients.length));
-    }, 15000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const handleNewDownload = async () => {
     if (!gradientRef.current) return;
@@ -63,10 +55,9 @@ export default function App() {
       const blob = await screenshot.blob(gradientRef.current, {
         format: "png",
         scale: 2,
-        backgroundColor: null, // Transparent background
+        backgroundColor: null,
       });
 
-      // Create download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -81,18 +72,49 @@ export default function App() {
   };
 
   return (
-    <div className="w-full">
-      <main className="mt-6">
-        <h1 className="mx-auto mb-4 w-fit scroll-m-20 font-aladin text-4xl font-extrabold tracking-tight">Gradie Testing</h1>
-        <GradientPreview ref={gradientRef} gradient={gradientString} className="mx-auto my-8 w-[45%]" />
-        <p onClick={() => copyToClipboard(gradientString)} className="my-4 w-full text-center font-aladin text-xl font-bold text-black">
+    <div className="flex h-screen w-full">
+      {/* Sidebar */}
+      <aside className="h-full w-64 overflow-y-auto border-r border-gray-200 bg-gray-50 p-4">
+        <h2 className="mb-4 font-aladin text-xl font-bold">Gradients</h2>
+        <div className="flex flex-col gap-2">
+          {defaultGradients.map((gradient, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              className={cn(
+                "h-16 w-full cursor-pointer rounded-lg border-2 transition-all hover:scale-105",
+                currentIndex === index ? "border-primary ring-2 ring-primary ring-offset-2" : "border-transparent",
+              )}
+              style={{
+                backgroundImage: gradient,
+                transform: "translate3d(0,0,0)",
+              }}
+              aria-label={`Select gradient ${index + 1}`}
+            />
+          ))}
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex flex-1 flex-col items-center justify-center p-8">
+        <h1 className="mb-8 scroll-m-20 font-aladin text-4xl font-extrabold tracking-tight">Gradie Testing</h1>
+
+        <div className="w-full max-w-3xl">
+          <GradientPreview ref={gradientRef} gradient={gradientString} className="w-full" />
+        </div>
+
+        <p
+          onClick={() => copyToClipboard(gradientString)}
+          className="my-6 max-w-3xl cursor-pointer text-center font-aladin text-lg font-bold break-all text-black hover:text-primary"
+        >
           {gradientString}
         </p>
-        <div className="mx-auto flex w-3/4 items-center justify-center gap-8">
-          <button className="max-w-36 rounded-xl bg-primary px-8 py-4 text-white" onClick={handleNewDownload}>
+
+        <div className="flex items-center justify-center gap-8">
+          <button className="rounded-xl bg-primary px-8 py-4 text-white hover:opacity-90" onClick={handleNewDownload}>
             new lib
           </button>
-          <button className="max-w-36 rounded-xl bg-black px-8 py-4 text-white">old lib</button>
+          <button className="rounded-xl bg-black px-8 py-4 text-white hover:opacity-90">old lib</button>
         </div>
       </main>
     </div>
