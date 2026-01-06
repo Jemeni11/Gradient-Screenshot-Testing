@@ -11,8 +11,7 @@
     "lint": "pnpm eslint && pnpm stylelint",
     "stylelint:fix": "stylelint **/*.css --fix",
     "preview": "vite preview",
-    "prettier": "prettier --write .",
-    "prepare": "husky install"
+    "prettier": "prettier --write ."
   },
   "dependencies": {
     "@renoun/screenshot": "^0.1.1",
