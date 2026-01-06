@@ -1,6 +1,8 @@
 import type { CSSProperties, Ref } from "react";
 import { useRef, useState } from "react";
 
+import { domToBlob } from "modern-screenshot";
+
 import { cn } from "@/lib/utils";
 import { screenshot } from "@renoun/screenshot";
 
@@ -61,7 +63,33 @@ export default function App() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `gradient-${Date.now()}.png`;
+      link.download = `gradient-new-${Date.now()}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to download gradient:", error);
+    }
+  };
+
+  const handleOldDownload = async () => {
+    if (!gradientRef.current) return;
+
+    try {
+      const blob = await domToBlob(gradientRef.current, {
+        scale: 2,
+        backgroundColor: null,
+      });
+
+      if (!blob) {
+        throw new Error("Failed to generate blob");
+      }
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `gradient-old-${Date.now()}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -114,7 +142,9 @@ export default function App() {
           <button className="rounded-xl bg-primary px-8 py-4 text-white hover:opacity-90" onClick={handleNewDownload}>
             new lib
           </button>
-          <button className="rounded-xl bg-black px-8 py-4 text-white hover:opacity-90">old lib</button>
+          <button className="rounded-xl bg-black px-8 py-4 text-white hover:opacity-90" onClick={handleOldDownload}>
+            old lib
+          </button>
         </div>
       </main>
     </div>
